@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绩点计算器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .subject {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .subject input {
+            margin-right: 10px;
+            padding: 5px;
+            width: 80px;
+        }
+        .subject input[type="text"] {
+            width: 200px;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .add-subject {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .calculate-gpa {
+            background-color: #008CBA;
+            color: white;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>绩点计算器</h1>
+
+    <div id="subjects">
+        <div class="subject">
+            <input type="text" placeholder="科目名称" disabled>
+            <input type="number" placeholder="绩点" step="0.01" min="0" max="4">
+            <input type="number" placeholder="学分" step="0.1" min="0">
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button class="add-subject">添加科目</button>
+        <button class="calculate-gpa">计算总绩点</button>
+    </div>
+
+    <div class="result" id="result"></div>
+
+	<script>
+		document.querySelector('.add-subject').addEventListener('click', function() {
+			const subjectsDiv = document.getElementById('subjects');
+			const newSubjectDiv = document.createElement('div');
+			newSubjectDiv.classList.add('subject');
+			newSubjectDiv.innerHTML = `
+				<input type="text" placeholder="科目名称" disabled>
+				<input type="number" placeholder="绩点" step="0.01" min="0" max="4">
+				<input type="number" placeholder="学分" step="0.1" min="0">
+			`;
+			subjectsDiv.appendChild(newSubjectDiv);
+		});
+
+		document.querySelector('.calculate-gpa').addEventListener('click', function() {
+			let totalPoints = 0;
+			let totalCredits = 0;
+			const subjects = document.querySelectorAll('.subject');
+
+			subjects.forEach(function(subject) {
+				const gpa = parseFloat(subject.children[1].value);
+				const credit = parseFloat(subject.children[2].value);
+
+				if (!isNaN(gpa) && !isNaN(credit)) {
+					totalPoints += gpa * credit;
+					totalCredits += credit;
+				}
+			});
+
+			const resultDiv = document.getElementById('result');
+			if (totalCredits > 0) {
+				const finalGPA = totalPoints / totalCredits;
+				resultDiv.textContent = `总绩点: ${finalGPA.toFixed(6)}`;
+			} else {
+				resultDiv.textContent = '请输入有效的绩点和学分。';
+			}
+		});
+	</script>
+
+
+</body>
+</html>
